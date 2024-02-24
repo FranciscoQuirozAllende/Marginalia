@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Audio Personalizado</title>
+</head>
+<body>
+    <h1>Reproductor de Audio Personalizado</h1>
+    <audio id="audioPlayer" controls>
+        <source src="http://localhost:3000/audio" type="audio/mpeg">
+        Tu navegador no soporta la reproducción de audio.
+    </audio>
+    <div>
+        <button onclick="playAudio()">Play</button>
+        <button onclick="pauseAudio()">Pause</button>
+        <input type="range" id="seekSlider" value="0" step="1" min="0" max="100" onchange="seekAudio()">
+    </div>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const seekSlider = document.getElementById('seekSlider');
+        let duration = NaN;
+
+        audio.addEventListener('loadedmetadata', function() {
+            console.log('loadedmetadata');
+            duration = audio.duration;
+        });
+
+        function playAudio() {
+            audio.play();
+        }
+
+        function pauseAudio() {
+            audio.pause();
+        }
+
+        function seekAudio() {
+            if (!isNaN(duration)) {
+                const seekto = duration * (seekSlider.value / 100);
+                audio.currentTime = seekto;
+            }
+        }
+
+        function updateSeekSlider() {
+            const newPosition = audio.currentTime * (100 / duration);
+            seekSlider.value = newPosition;
+        }
+
+        audio.addEventListener('timeupdate', updateSeekSlider);
+    </script>
+</body>
+</html>
+
+
